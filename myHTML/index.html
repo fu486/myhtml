@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 智能穿搭设计系统</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Microsoft YaHei", sans-serif;
+}
+
+body {
+    background: #FFF0F5;
+    color: #333;
+    min-height: 100vh;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 30px;
+    background: #FFB6C1;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #FF69B4, #FFB6C1);
+    border-radius: 8px;
+}
+
+.system-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.top-menu {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.top-menu button {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 8px 16px;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.top-menu button:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.top-menu button.primary {
+    background: #FF69B4;
+    color: #fff;
+    border: none;
+}
+
+.container {
+    display: flex;
+    height: calc(100vh - 65px);
+}
+
+.left-menu {
+    width: 220px;
+    background: #FFB6C1;
+    border-right: 1px solid rgba(255,255,255,0.2);
+    padding: 20px 0;
+}
+
+/* 左侧菜单分组标题样式 */
+.menu-group-title {
+    margin-top: 30px;
+    padding: 0 20px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* 菜单项基础样式 */
+.menu-item {
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+    color: #fff;
+    border-left: 3px solid transparent;
+}
+
+/* 菜单项 hover 效果 */
+.menu-item:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+/* 选中状态样式（高亮） */
+.menu-item.selected {
+    background: rgba(255, 105, 180, 0.2);
+    color: #FF69B4;
+    border-left: 3px solid #FF69B4;
+    font-weight: 600;
+}
+
+/* 分类标题不可点击 */
+.category-title {
+    cursor: default;
+    font-weight: 600;
+    background: rgba(255,255,255,0.05);
+}
+.category-title:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+.main-content {
+    flex: 1;
+    padding: 30px;
+    overflow: auto;
+    background: linear-gradient(135deg, #FFF0F5, #FFE4E1);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+}
+
+.btns {
+    display: flex;
+    gap: 12px;
+}
+
+.btns button {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1px solid #FFB6C1;
+    background: rgba(255, 182, 193, 0.1);
+    color: #333;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btns button:hover {
+    background: rgba(255, 182, 193, 0.2);
+}
+
+.btns button.primary {
+    background: #FF69B4;
+    color: #fff;
+    border: none;
+}
+
+.workbench {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 20px;
+}
+
+.design-area {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 16px;
+    padding: 25px;
+    border: 1px solid #FFB6C1;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.area-title {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #666;
+    font-size: 14px;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #FFB6C1;
+    background: #fff;
+    color: #333;
+    outline: none;
+}
+
+.input-flex {
+    display: flex;
+    gap: 10px;
+}
+
+.input-flex > div {
+    flex: 1;
+}
+
+.upload-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px dashed #FFB6C1;
+    background: transparent;
+    color: #666;
+    cursor: pointer;
+}
+
+.style-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.style-item {
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #FFB6C1;
+    background: #fff;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s;
+    color: #333;
+}
+
+.style-item:hover {
+    border-color: #FF69B4;
+    background: rgba(255, 105, 180, 0.1);
+}
+
+.style-item.active {
+    background: #FF69B4;
+    color: #fff;
+    border-color: #FF69B4;
+}
+
+.tag-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.tag {
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: 1px solid #FFB6C1;
+    background: #fff;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+}
+
+.tag.active {
+    border-color: #FF69B4;
+    background: #FF69B4;
+    color: #fff;
+}
+
+.right-panel {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 16px;
+    padding: 25px;
+    border: 1px solid #FFB6C1;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.panel-title {
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.slider-item {
+    margin-bottom: 25px;
+}
+
+.slider-item label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    color: #666;
+    font-size: 14px;
+}
+
+.slider-item input[type="range"] {
+    width: 100%;
+    height: 6px;
+    accent-color: #FF69B4;
+    border-radius: 3px;
+}
+
+/* 结果弹窗样式优化（适配图片） */
+.result-modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 20px;
+}
+.result-box {
+    background: #fff;
+    width: 90%; max-width: 700px;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    overflow-y: auto;
+    max-height: 90vh;
+}
+.result-box h3 {
+    color: #FF69B4;
+    margin-bottom: 15px;
+    text-align: center;
+}
+.result-box p {
+    line-height: 1.8;
+    font-size: 15px;
+    margin: 6px 0;
+}
+.result-box .close {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #FF69B4;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* 穿搭图片样式 */
+.outfit-img {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 10px;
+    margin: 15px auto;
+    display: block;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* 提示框样式 */
+.alert-modal {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    z-index: 10000;
+    text-align: center;
+}
+.alert-modal p {
+    color: #333;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+.alert-modal button {
+    padding: 8px 20px;
+    background: #FF69B4;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.alert-modal.hidden {
+    display: none;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="logo">
+        <div class="logo-icon"></div>
+        <div class="system-title">AI 智能穿搭设计系统</div>
+    </div>
+    <div class="top-menu">
+        <button>风格生成</button>
+        <button class="primary">一键生成穿搭</button>
+    </div>
+</div>
+
+<div class="container">
+    <!-- 左侧菜单：场景+风格分类，可分别选择 -->
+    <div class="left-menu">
+        <!-- 穿搭场景分类 -->
+        <div class="menu-item category-title">穿搭场景分类</div>
+        <div class="menu-item scene-item" data-type="scene">日常出行</div>
+        <div class="menu-item scene-item" data-type="scene">商务办公</div>
+        <div class="menu-item scene-item" data-type="scene">休闲娱乐</div>
+        <div class="menu-item scene-item" data-type="scene">社交聚会</div>
+
+        <!-- 穿搭风格分类 -->
+        <div class="menu-group-title">穿搭风格分类</div>
+        <div class="menu-item style-item" data-type="style">极简风</div>
+        <div class="menu-item style-item" data-type="style">街头风</div>
+        <div class="menu-item style-item" data-type="style">复古风</div>
+        <div class="menu-item style-item" data-type="style">学院风</div>
+        <div class="menu-item style-item" data-type="style">温柔风</div>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <div class="title">穿搭设计 · 生成工作台</div>
+            <div class="btns">
+                <button>上传参考图</button>
+                <button>生成记录</button>
+                <button class="primary" id="generateBtn">开始智能生成</button>
+            </div>
+        </div>
+
+        <div class="workbench">
+            <div class="design-area">
+                <div class="area-title">穿搭需求描述</div>
+
+                <div class="input-group">
+                    <label>描述你想要的穿搭风格</label>
+                    <input type="text" id="desc" placeholder="例如：适合日常通勤、显瘦显高、温柔气质款...">
+                </div>
+
+                <div class="input-group input-flex">
+                    <div>
+                        <label>性别</label>
+                        <select id="gender">
+                            <option value="女">女生</option>
+                            <option value="男">男生</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>身高(cm)</label>
+                        <input type="number" id="height" placeholder="如：165">
+                    </div>
+                    <div>
+                        <label>体重(kg)</label>
+                        <input type="number" id="weight" placeholder="如：50">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>选择穿搭风格</label>
+                    <div class="style-grid">
+                        <div class="style-item" data-val="温柔清新">温柔清新</div>
+                        <div class="style-item" data-val="酷飒街头">酷飒街头</div>
+                        <div class="style-item" data-val="通勤干练">通勤干练</div>
+                        <div class="style-item" data-val="运动活力">运动活力</div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>穿搭场景</label>
+                    <div class="tag-group">
+                        <div class="tag" data-val="日常上学">日常上学</div>
+                        <div class="tag" data-val="上班通勤">上班通勤</div>
+                        <div class="tag" data-val="约会逛街">约会逛街</div>
+                        <div class="tag" data-val="朋友聚会">朋友聚会</div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>色系偏好</label>
+                    <div class="tag-group">
+                        <div class="tag" data-val="浅色系">浅色系</div>
+                        <div class="tag" data-val="深色系">深色系</div>
+                        <div class="tag" data-val="马卡龙">马卡龙</div>
+                        <div class="tag" data-val="复古撞色">复古撞色</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧参数栏：全新内容 -->
+            <div class="right-panel">
+                <div class="panel-title">穿搭细节调节</div>
+                <div class="slider-item"><label><span>上衣长度</span> <span>60</span></label><input type="range" min="0" max="100" value="60"></div>
+                <div class="slider-item"><label><span>下装宽松度</span> <span>50</span></label><input type="range" min="0" max="100" value="50"></div>
+                <div class="slider-item"><label><span>色彩饱和度</span> <span>75</span></label><input type="range" min="0" max="100" value="75"></div>
+                <div class="slider-item"><label><span>配饰丰富度</span> <span>40</span></label><input type="range" min="0" max="100" value="40"></div>
+                <div class="slider-item"><label><span>面料舒适度</span> <span>85</span></label><input type="range" min="0" max="100" value="85"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 结果弹窗 -->
+<div class="result-modal" id="resultModal">
+    <div class="result-box">
+        <h3>✨ AI 智能穿搭方案已生成</h3>
+        <div id="resultContent"></div>
+        <button class="close" onclick="closeResult()">关闭</button>
+    </div>
+</div>
+
+<!-- 提示弹窗 -->
+<div class="alert-modal hidden" id="alertModal">
+    <p id="alertText">请在左侧栏选择一个场景和一个风格！</p>
+    <button onclick="hideAlert()">确定</button>
+</div>
+
+<script>
+// 穿搭图片映射（不同风格+性别对应不同图片）
+const outfitImages = {
+    // 女生穿搭（国内稳定加载）
+    女: {
+        "温柔清新": "https://img2.baidu.com/it/u=1939723715,3327473850&fm=253&app=138&f=JPEG?w=800&h=1319",    // 浅色系针织+半身裙（温柔风）
+        "酷飒街头": "https://image-cdn.poizon.com/app/2025/community/26574064_byte1249098byte_862b81a879a76877ea6198aa132d2b66_iOS_w1280h1920.jpg",  // 工装外套+阔腿裤+马丁靴（街头风）
+        "通勤干练": "https://img0.baidu.com/it/u=2424208472,655702388&fm=253&app=138&f=JPEG?w=800&h=1067",   // 衬衫+西装裤+乐福鞋（通勤风）
+        "运动活力": "https://img0.baidu.com/it/u=2711985079,2420028158&fm=253&app=138&f=JPEG?w=800&h=1319"    // 卫衣+运动裤+跑鞋（运动风）
+    },
+    // 男生穿搭（国内稳定加载）
+    男: {
+        "温柔清新": "https://image-cdn.poizon.com/app/2024/community/64530978_byte939033byte_71cc0c3cde32853e363bdc37aadafbe2_iOS_w1440h1920.jpg",  // 浅色衬衫+休闲裤+小白鞋（温柔风）
+        "酷飒街头": "https://img2.baidu.com/it/u=2770298988,3666758826&fm=253&app=138&f=JPEG?w=800&h=1067",  // 工装夹克+牛仔裤+马丁靴（街头风）
+        "通勤干练": "https://pic.rmb.bdstatic.com/bjh/240911/430751e472771e825357ddc8f116be339178.jpeg",  // 纯色衬衫+西裤+皮鞋（通勤风）
+        "运动活力": "https://image-cdn.poizon.com/app/2025/community/6490166_model23127PN0CCmodel_byte832104byte_a005a04a0ce863d3b6b897c654c16d29_1745031454397_du_android_w1441_h1921.webp"    // 运动T恤+运动裤+篮球鞋（运动风）
+    }
+};
+// 全局变量：记录左侧选中的场景和风格
+let selectedScene = ''; // 选中的场景
+let selectedStyle = ''; // 选中的风格
+
+// 左侧场景项点击事件（只能选一个）
+const sceneItems = document.querySelectorAll('.scene-item');
+sceneItems.forEach(item => {
+    item.addEventListener('click', () => {
+        // 清空同类型选中状态
+        sceneItems.forEach(i => i.classList.remove('selected'));
+        // 选中当前项
+        item.classList.add('selected');
+        // 记录选中的场景
+        selectedScene = item.textContent.trim();
+    });
+});
+
+// 左侧风格项点击事件（只能选一个）
+const styleItemsLeft = document.querySelectorAll('.style-item[data-type="style"]');
+styleItemsLeft.forEach(item => {
+    item.addEventListener('click', () => {
+        // 清空同类型选中状态
+        styleItemsLeft.forEach(i => i.classList.remove('selected'));
+        // 选中当前项
+        item.classList.add('selected');
+        // 记录选中的风格
+        selectedStyle = item.textContent.trim();
+    });
+});
+
+// 中间风格格子点击事件
+const styleItemsCenter = document.querySelectorAll('.style-item[data-val]');
+styleItemsCenter.forEach(el => {
+    el.addEventListener('click', () => {
+        styleItemsCenter.forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+    });
+});
+
+// 标签多选事件
+const tags = document.querySelectorAll('.tag');
+tags.forEach(el => {
+    el.addEventListener('click', () => {
+        el.classList.toggle('active');
+    });
+});
+
+// 显示提示框
+function showAlert(text) {
+    document.getElementById('alertText').textContent = text;
+    document.getElementById('alertModal').classList.remove('hidden');
+}
+
+// 隐藏提示框
+function hideAlert() {
+    document.getElementById('alertModal').classList.add('hidden');
+}
+
+// 自动计算尺码
+function getSize(gender, h, w) {
+    if (!h || !w) return "未知";
+    h = Number(h); w = Number(w);
+    if (gender === "女") {
+        if (h >= 155 && w <= 45) return "S码";
+        if (h >= 155 && w <= 55) return "M码";
+        if (h >= 160 && w <= 65) return "L码";
+        if (h >= 165 && w <= 75) return "XL码";
+        return "2XL码";
+    } else {
+        if (h >= 160 && w <= 55) return "S码";
+        if (h >= 165 && w <= 65) return "M码";
+        if (h >= 170 && w <= 75) return "L码";
+        if (h >= 175 && w <= 85) return "XL码";
+        return "2XL码";
+    }
+}
+
+// 生成穿搭（含左侧栏校验）
+document.getElementById('generateBtn').addEventListener('click', () => {
+    // 1. 校验左侧栏是否各选一个
+    if (!selectedScene) {
+        showAlert('请先在左侧「穿搭场景分类」中选择一个场景！');
+        return;
+    }
+    if (!selectedStyle) {
+        showAlert('请先在左侧「穿搭风格分类」中选择一个风格！');
+        return;
+    }
+
+    // 2. 获取其他参数
+    const desc = document.getElementById('desc').value || '无描述';
+    const gender = document.getElementById('gender').value;
+    const height = document.getElementById('height').value || '未知';
+    const weight = document.getElementById('weight').value || '未知';
+    const size = getSize(gender, height, weight);
+
+    const centerStyle = document.querySelector('.style-item[data-val].active')?.dataset.val || '未选择风格';
+    const scenes = Array.from(document.querySelectorAll('.tag.active')).map(t => t.dataset.val).join('、') || '未选择场景';
+    
+    // 3. 拼接结果（包含左侧选中的场景+风格）
+    let result = `
+        <p>👤 性别：${gender}</p>
+        <p>📏 身高：${height} cm</p>
+        <p>⚖️ 体重：${weight} kg</p>
+        <p>📍 左侧选中场景：${selectedScene}</p>
+        <p>🎀 左侧选中风格：${selectedStyle}</p>
+        <p>📝 自定义描述：${desc}</p>
+        <p>🔥 <b>推荐衣服尺码：${size}</b></p>
+        <br>
+        <h3>👗 专属穿搭推荐</h3>
+    `;
+
+    // 4. 匹配穿搭文字+图片
+    if (gender === "女") {
+        if (centerStyle.includes('温柔清新') || selectedStyle === '温柔风') {
+            result += `
+                <p>✅ 上衣：浅色系雪纺衫 / 针织衫</p>
+                <p>✅ 下装：半身裙 / 休闲直筒裤</p>
+                <p>✅ 鞋子：小白鞋 / 浅口单鞋</p>
+                <p>✅ 适配场景：${selectedScene}</p>
+                <p>✅ 风格特点：温柔、干净、显气质</p>
+                <br>
+                <img src="${outfitImages.女['温柔清新']}" alt="女生温柔清新穿搭" class="outfit-img">
+            `;
+        } else if (centerStyle.includes('酷飒街头') || selectedStyle === '街头风') {
+            result += `
+                <p>✅ 上衣：宽松T恤 / 工装外套</p>
+                <p>✅ 下装：牛仔阔腿裤 / 工装裤</p>
+                <p>✅ 鞋子：马丁靴 / 运动鞋</p>
+                <p>✅ 适配场景：${selectedScene}</p>
+                <p>✅ 风格特点：帅气、个性、显瘦</p>
+                <br>
+                <img src="${outfitImages.女['酷飒街头']}" alt="女生酷飒街头穿搭" class="outfit-img">
+            `;
+        } else if (centerStyle.includes('通勤干练') || selectedStyle === '极简风') {
+            result += `
+                <p>✅ 上衣：简约衬衫 / 针织上衣</p>
+                <p>✅ 下装：西装裤 / 烟管裤</p>
+                <p>✅ 鞋子：乐福鞋 / 低跟鞋</p>
+                <p>✅ 适配场景：${selectedScene}</p>
+                <p>✅ 风格特点：专业、利落、显精神</p>
+                <br>
+                <img src="${outfitImages.女['通勤干练']}" alt="女生通勤干练穿搭" class="outfit-img">
+            `;
+        } else if (centerStyle.includes('运动活力') || selectedStyle === '学院风') {
+            result += `
+                <p>✅ 上衣：运动T恤 / 卫衣</p>
+                <p>✅ 下装：运动裤 / 束脚裤</p>
+                <p>✅ 鞋子：跑鞋 / 休闲鞋</p>
+                <p>✅ 适配场景：${selectedScene}</p>
+                <p>✅ 风格特点：舒适、减龄、显活力</p>
+                <br>
+                <img src="${outfitImages.女['运动活力']}" alt="女生运动活力穿搭" class="outfit-img">
+            `;
+        } else {
+            result += `<p>✅ 适配${selectedScene}场景的${selectedStyle}风格穿搭，简约舒适为主</p>`;
+        }
+    } else {
+        if (centerStyle.includes('温柔清新') || selectedStyle === '温柔风') {
+            result += `
+                <p>✅ 上衣：浅色衬衫 / 简约T恤</p>
+                <p>✅ 下装：休闲裤 / 牛仔裤</p>
+                <p>✅ 鞋子：小白鞋 / 板鞋</p>
+                <p>✅ 适配场景：${selectedScene}</p>
+                <p>✅ 风格特点：干净、清爽、阳光</p>
+                <br>
+                <img src="${outfitImages.男['温柔清新']}" alt="男生温柔清新穿搭" class="outfit-img">
+            `;
+        } else if (centerStyle.includes('酷飒街头') || selectedStyle === '街头风') {
+            result += `
+                <p>✅ 上衣：潮牌T恤 / 工装夹克</p>
+                <p>✅ 下装：工装裤 / 牛仔裤</p>
+                <p>✅ 鞋子：运动鞋 / 马丁靴</p>
+                <p>✅ 适配场景：${selectedScene}</p>
+                <p>✅ 风格特点：帅气、潮流、有气场</p>
+                <br>
+                <img src="${outfitImages.男['酷飒街头']}" alt="男生酷飒街头穿搭" class="outfit-img">
+            `;
+        } else if (centerStyle.includes('通勤干练') || selectedStyle === '极简风') {
+            result += `
+                <p>✅ 上衣：纯色衬衫 / POLO衫</p>
+                <p>✅ 下装：西裤 / 休闲裤</p>
+                <p>✅ 鞋子：皮鞋 / 休闲皮鞋</p>
+                <p>✅ 适配场景：${selectedScene}</p>
+                <p>✅ 风格特点：稳重、专业、显气质</p>
+                <br>
+                <img src="${outfitImages.男['通勤干练']}" alt="男生通勤干练穿搭" class="outfit-img">
+            `;
+        } else if (centerStyle.includes('运动活力') || selectedStyle === '学院风') {
+            result += `
+                <p>✅ 上衣：运动T恤 / 卫衣</p>
+                <p>✅ 下装：运动裤 / 束脚裤</p>
+                <p>✅ 鞋子：跑鞋 / 篮球鞋</p>
+                <p>✅ 适配场景：${selectedScene}</p>
+                <p>✅ 风格特点：舒适、阳光、有活力</p>
+                <br>
+                <img src="${outfitImages.男['运动活力']}" alt="男生运动活力穿搭" class="outfit-img">
+            `;
+        } else {
+            result += `<p>✅ 适配${selectedScene}场景的${selectedStyle}风格穿搭，简约舒适为主</p>`;
+        }
+    }
+
+    // 5. 显示结果
+    document.getElementById('resultContent').innerHTML = result;
+    document.getElementById('resultModal').style.display = 'flex';
+});
+
+// 关闭结果弹窗
+function closeResult() {
+    document.getElementById('resultModal').style.display = 'none';
+}
+</script>
+</body>
+</html>
