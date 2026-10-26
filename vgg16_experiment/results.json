@@ -1,0 +1,14 @@
+{
+  "total_parameters": 14715714,
+  "trainable_parameters": 1026,
+  "training_seconds": 762.8436516119982,
+  "best": {
+    "epoch": 3,
+    "train_loss": 0.11659966415256207,
+    "train_acc": 95.20299812617114,
+    "test_loss": 0.11802738627996176,
+    "test_acc": 95.30400395452298
+  },
+  "train_size": 8005,
+  "test_size": 2023
+}
